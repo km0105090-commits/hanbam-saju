@@ -1,36 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 한밤사주
 
-## Getting Started
+절기 기준 만세력으로 정확하게 세운 사주를 AI 가 풀어 주는 사이트입니다.
 
-First, run the development server:
+## 내 컴퓨터(Windows)에서 처음 열기
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. **Node.js 설치** — https://nodejs.org 에서 LTS(22 이상) 설치
+2. 이 폴더를 원하는 곳에 둡니다. (예: `C:\Users\내이름\hanbam-saju`)
+3. 폴더에서 터미널을 열고(폴더 빈 곳에서 Shift+우클릭 → "터미널에서 열기") 아래를 차례로 입력:
+   ```
+   npm install
+   npm run dev
+   ```
+4. 브라우저에서 http://localhost:3000 을 엽니다.
+5. Claude Code 로 작업하려면 같은 터미널에서 `claude` 를 입력하세요. `CLAUDE.md` 를 읽고 프로젝트를 이해한 상태로 시작합니다.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 지금 되는 것
+- 샘플 화면 전체(홈, 신년·연애·궁합·인생 4개 상품, 결제 전 정곡 풀이, 오늘의 운세, 목소리·배경음)
+- **진짜 만세력 계산**: 절입 시각(분 단위), 서울 태양시 보정, 옛 표준시·서머타임, 한국천문연구원 기준 음력·윤달, 대운
+- 만세력 API: `POST /api/saju`
+- 토스페이먼츠 결제 승인 API 뼈대
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 다음에 할 일
+1. AI 풀이 연결 (Claude API, `docs/AI풀이_프롬프트_상품별.md`)
+2. 토스페이먼츠 결제창 연결 (테스트 키로 먼저)
+3. 카카오 로그인, 결제 내역·리포트 보관 (DB)
+4. Vercel 에 배포, 도메인 연결
+5. 사업자 정보·약관·환불 규정 표기
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 확인 명령
+- `npm test` — 만세력 정확도 테스트 (KASI 절입 시각 등과 비교)
+- `npm run build` — 배포 전 점검

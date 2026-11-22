@@ -6,9 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "node --test tests/saju.test.ts"
   },
   "dependencies": {
+    "korean-lunar-calendar": "^0.4.0",
+    "lunar-javascript": "^1.7.8",
     "next": "16.4.6",
     "react": "19.3.0",
     "react-dom": "19.3.0"
@@ -20,5 +23,8 @@
     "eslint": "^9",
     "eslint-config-next": "16.4.6",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=22.18"
   }
 }
