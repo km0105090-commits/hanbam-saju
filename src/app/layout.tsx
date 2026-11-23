@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./hanbam.css";
+import "./premium.css";
 
 export const metadata: Metadata = {
   title: "한밤사주",
@@ -22,7 +23,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Serif+KR:wght@500;700;900&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap"
         />
       </head>
       <body>{children}</body>
