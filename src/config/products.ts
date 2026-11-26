@@ -5,6 +5,7 @@ export const PRODUCTS = {
   newyear: { title: "2027 신년운세", price: 29900, guide: "연지" },
   love: { title: "연애사주", price: 29900, guide: "한결" },
   match: { title: "궁합사주", price: 34900, guide: "홍연" },
+  one: { title: "한 가지 질문 풀이", price: 990, guide: "한밤" },
   life: { title: "인생사주", price: 44900, guide: "백운 선생" },
 } as const;
 

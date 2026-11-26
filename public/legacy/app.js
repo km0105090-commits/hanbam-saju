@@ -1424,6 +1424,27 @@
     var minI = cnt.indexOf(Math.min.apply(null, cnt));
     return { P: P, me: me, cnt: cnt, months: months, best: best, low: low, areas: areas, yr: yr, luck: minI };
   }
+  /* 2027 열두 달 기운 곡선: 1~3월만 보여 주고 나머지는 봉인 (유료 리포트 미리보기) */
+  function nyCurve(C) {
+    var W = 320, H = 150, L = 14, R = 14, T = 20, B = 30, open = 3;
+    var X = function (i) { return L + i * (W - L - R) / 11; }, Y = function (v) { return T + (95 - v) / 60 * (H - T - B); };
+    var pts = C.months.map(function (x, i) { return [X(i), Y(x.sc)]; }), d = "M" + pts[0][0] + " " + pts[0][1];
+    for (var i = 1; i < pts.length; i++) { var mx = (pts[i - 1][0] + pts[i][0]) / 2; d += " C" + mx + " " + pts[i - 1][1] + " " + mx + " " + pts[i][1] + " " + pts[i][0] + " " + pts[i][1]; }
+    var cut = (X(open - 1) + X(open)) / 2, area = d + " L" + X(11) + " " + (H - B) + " L" + X(0) + " " + (H - B) + " Z";
+    var grid = [50, 70, 90].map(function (v) { return '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(v) + '" y2="' + Y(v) + '"/>'; }).join("");
+    var labs = C.months.map(function (x, i) { return '<text x="' + X(i) + '" y="' + (H - 10) + '"' + (i < open ? ' class="on"' : '') + '>' + x.m + '</text>'; }).join("");
+    var dots = C.months.slice(0, open).map(function (x, i) { return '<circle cx="' + X(i) + '" cy="' + Y(x.sc) + '" r="3.5"/><text class="v" x="' + X(i) + '" y="' + (Y(x.sc) - 9) + '">' + x.sc + '</text>'; }).join("");
+    return '<section class="r-sec"><div class="r-sec-head"><h2>열두 달 기운 곡선</h2><span class="no">04</span></div>' +
+      '<div class="ny-curve"><svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="2027년 1월부터 3월까지의 기운 흐름. 4월부터 12월은 전체 풀이에서 열려요.">' +
+      '<defs><clipPath id="nyOpen"><rect x="0" y="0" width="' + cut + '" height="' + H + '"/></clipPath><clipPath id="nyShut"><rect x="' + cut + '" y="0" width="' + (W - cut) + '" height="' + H + '"/></clipPath>' +
+      '<linearGradient id="nyFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e3c27f" stop-opacity=".28"/><stop offset="1" stop-color="#e3c27f" stop-opacity="0"/></linearGradient><filter id="nyBlur"><feGaussianBlur stdDeviation="4"/></filter></defs>' +
+      '<g class="grid">' + grid + '</g>' +
+      '<g clip-path="url(#nyShut)" filter="url(#nyBlur)" opacity=".5"><path class="area" d="' + area + '"/><path class="ln" d="' + d + '"/></g>' +
+      '<g clip-path="url(#nyOpen)"><path class="area" d="' + area + '"/><path class="ln" d="' + d + '"/></g>' + dots +
+      '<line class="cut" x1="' + cut + '" x2="' + cut + '" y1="' + (T - 8) + '" y2="' + (H - B) + '"/><g class="labs">' + labs + '</g></svg>' +
+      '<div class="ny-curve-lock" style="left:' + (cut / W * 100) + '%"><span>' + LOCK_SVG + '4월 ~ 12월</span><small>아홉 달의 곡선과 달마다의 한 줄은 전체 풀이에서 열려요</small></div></div>' +
+      '<p class="note">달마다 내 일간과 그 달의 기운이 만나는 정도를 점수로 그린 흐름이에요. 좋고 나쁨을 단정하지 않아요.</p></section>';
+  }
   function renderNY(s) {
     document.querySelectorAll(".price-now").forEach(function (el) { el.textContent = PR().price; });
     var C = nyCalc(s), P = C.P, name = esc(s.name), meKo = ST_KO[P.day[0]] + EL_KO[C.me];
@@ -1461,7 +1482,7 @@
       '<section class="r-sec"><div class="r-sec-head"><h2>사주팔자 구성</h2><span class="no">02</span></div>' + pillars +
         '<p class="note">' + calcNote(P, s.cal) + '</p></section>' +
       '<section class="r-sec"><div class="r-sec-head"><h2>분야별 흐름</h2><span class="no">03</span></div>' + areasHTML +
-        '<div class="talk"><div class="ava">' + dali() + '</div><div class="say-bubble" data-vo="ny_res03">가장 궁금해하신 ' + C.areas[pickI][0] + '부터 열어 두었습니다. 나머지 세 갈래는 봉인 안에 있습니다.</div></div></section>';
+        '<div class="talk"><div class="ava">' + dali() + '</div><div class="say-bubble" data-vo="ny_res03">가장 궁금해하신 ' + C.areas[pickI][0] + '부터 열어 두었습니다. 나머지 세 갈래는 봉인 안에 있습니다.</div></div></section>' + nyCurve(C);
     var COLOR = [["초록", "동쪽", "3, 8"], ["붉은색", "남쪽", "2, 7"], ["황토색", "가운데", "5, 10"], ["흰색", "서쪽", "4, 9"], ["남색", "북쪽", "1, 6"]][C.luck];
     var calHTML = '<div class="ny-cal">' + C.months.map(function (x) { return '<div class="' + (x.m === C.best.m ? "hi" : C.low.some(function (l) { return l.m === x.m; }) ? "lo" : "") + '">' + x.m + '월</div>'; }).join("") + '</div>';
     var L = [
@@ -1653,7 +1674,7 @@
   }
 
   /* ---------- 화면 전환 ---------- */
-  var VIEWS = ["home", "intro", "form", "result", "today", "box", "me"], TABS = ["home", "today", "box", "me"];
+  var VIEWS = ["home", "intro", "form", "result", "today", "box", "me", "chart", "gunghap", "inyeon", "one"], TABS = ["home", "today", "box", "me"];
   function show(v) {
     if (PRODS[v]) { applyProduct(v); v = "intro"; }
     if (v !== "intro") bgmStop();
@@ -1663,13 +1684,15 @@
     var tb = document.getElementById("tabbar"); tb.hidden = TABS.indexOf(v) < 0;
     tb.querySelectorAll("[data-tab]").forEach(function (b) { if (b.dataset.tab === v) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
     drawer.querySelectorAll("[data-dprod]").forEach(function (b) { b.classList.toggle("cur", v === "intro" && b.dataset.dprod === CUR); });
-    if (v === "today") renderToday();
+    var FX = window.HanbamFeatures;
+    if (v === "today" && !(FX && FX.show("today"))) renderToday();
+    if (FX && (v === "home" || FX.views.indexOf(v) >= 0)) FX.show(v);
     if (v === "box") renderBox();
     window.scrollTo(0, 0);
     cancelAnimationFrame(skyRAF); clearTimeout(typeTimer); clearTimers();
     if (v === "intro") { startSky(); runHeroBubble(); setupScenes(); setupFilm(); setupStory(); setupFlow(); if (!qBody.innerHTML) qGo(0); }
     if (v === "form") startForm(true);
-    if (v === "result") { var s = (state && state.birth) ? state : (loadSaved() || SAMPLE); renderResult(s); }
+    if (v === "result") { var s = (state && state.birth) ? state : (loadSaved() || SAMPLE); renderResult(s); if (FX) FX.result(s); }
   }
   function go(v) { if (v === "intro") v = CUR; if (location.hash === "#" + v) show(v); else location.hash = v; }
   document.querySelectorAll("[data-go]").forEach(function (b) { b.addEventListener("click", function () { go(b.dataset.go); }); });
