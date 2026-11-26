@@ -1,0 +1,122 @@
+/* =====================================================================
+   다듬기 레이어 (마지막에 불러옴)
+   방향: 금빛 그라데이션·글로우·반짝임을 걷어내고, 아이보리 + 먹색 + 홍연의 붉은색 하나로.
+   명조(Noto Serif KR) 제목 + 고딕 본문 + 고정폭 숫자/라벨, 가는 선과 넓은 여백.
+   화면 구조와 흐름은 그대로 두고 겉모습만 바꿔요.
+   ===================================================================== */
+:root {
+  --f-display: "Noto Serif KR", "Gowun Batang", "AppleMyungjo", serif;
+  --f-title: "Noto Serif KR", "Gowun Batang", "AppleMyungjo", serif;
+  --night-0: #0c0b0a;
+  --hair: rgba(236, 228, 212, .16);
+  --gold-1: #ece4d4;
+  --gold-2: rgba(236, 228, 212, .7);
+}
+html, body { background-color: #0c0b0a; }
+body { letter-spacing: -.005em; }
+::selection { background: rgba(181,55,42,.55); color: #fff; }
+
+/* 상단 바 */
+.brand { letter-spacing: .12em; font-weight: 600; font-size: 18px; }
+.icon-btn { background: transparent; border-color: rgba(236,228,212,.18); color: var(--ivory); border-radius: 0; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.icon-btn:hover { border-color: rgba(236,228,212,.5); }
+#v-home .topbar { background: linear-gradient(rgba(12,11,10,.55), rgba(12,11,10,0)); }
+
+/* 첫 화면 */
+.hx-veil { background: linear-gradient(180deg, rgba(12,11,10,.25) 0%, rgba(12,11,10,0) 22%, rgba(12,11,10,0) 38%, rgba(12,11,10,.88) 66%, #0c0b0a 97%); }
+.hx-dust { display: none; }
+.hx-eyebrow { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .26em; color: var(--ivory-2); }
+.hx-eyebrow span { font-family: var(--f-serif); border-color: rgba(236,228,212,.3); color: var(--ivory); background: none; padding: 2px 6px; }
+.hx-eyebrow::after { background: rgba(236,228,212,.3); }
+.hx-title { font-weight: 600; letter-spacing: -.045em; line-height: 1.22; color: var(--ivory); text-shadow: none; font-size: clamp(34px, 10vw, 46px); }
+.hx-title em { background: none; color: var(--ivory); -webkit-text-fill-color: currentColor; animation: none; font-weight: 600; font-style: normal;
+  text-decoration: underline; text-decoration-color: var(--red); text-decoration-thickness: 2px; text-underline-offset: 9px; }
+.hx-lead { color: var(--ivory-2); font-size: 15px; }
+.hx-btn, .hx-ghost { height: 54px; border-radius: 0; font-weight: 600; font-size: 15px; letter-spacing: 0; }
+.hx-btn { background: var(--ivory); color: #14110e; box-shadow: none; }
+.hx-btn::after { display: none; }
+.hx-btn:hover { transform: none; box-shadow: none; background: #fff; }
+.hx-ghost { background: transparent; border-color: rgba(236,228,212,.35); color: var(--ivory); backdrop-filter: none; -webkit-backdrop-filter: none; }
+.hx-ghost:hover { border-color: var(--ivory); background: transparent; }
+.hx-scroll { background: rgba(236,228,212,.18); }
+.hx-scroll::after { background: var(--ivory); }
+
+/* 믿음 띠 */
+.trust { background: none; border-color: rgba(236,228,212,.2); }
+.trust li + li { border-left-color: rgba(236,228,212,.12); }
+.trust b { background: none; -webkit-text-fill-color: currentColor; color: var(--ivory); font-weight: 600; }
+.trust span { color: var(--ivory-3); }
+
+/* 구역 제목: 가운데 금빛 마름모 → 왼쪽 정렬 고정폭 라벨 + 가는 선 */
+.home { gap: 30px; padding-top: 40px; }
+.sec-h { justify-content: flex-start; margin: 22px 0 -10px; font-family: var(--f-mono); font-size: 11px; letter-spacing: .2em; color: var(--ivory-3); }
+.sec-h::before { display: none; }
+.sec-h::after { background: rgba(236,228,212,.16); }
+.sec-h span::before, .sec-h span::after { display: none; }
+
+/* 추천 배너 */
+.banner { outline: 1px solid rgba(236,228,212,.16); outline-offset: 0; box-shadow: none; border-radius: 0; }
+.banner:hover { outline-offset: 0; outline-color: rgba(236,228,212,.4); }
+.banner-cta { color: var(--ivory); border-bottom-color: var(--red); }
+
+/* 분류 탭 */
+.cats { justify-content: flex-start; gap: 18px; border-bottom-color: rgba(236,228,212,.14); }
+.cats button[aria-pressed="true"]::after { background: var(--ivory); height: 1px; }
+
+/* 상품 카드: 그라데이션 패널 → 가는 선 사이의 목록 */
+.cards { gap: 0; border-top: 1px solid rgba(236,228,212,.16); }
+.pcard { animation: none; }
+.pcard.wide { padding: 20px 0; border: 0; border-bottom: 1px solid rgba(236,228,212,.12); background: none; box-shadow: none; border-radius: 0; }
+.pcard.wide::before { display: none; }
+.pcard.wide:hover { transform: none; box-shadow: none; }
+.pcard.wide .thumb { outline: 0; }
+.pcard .txt::before { font-family: var(--f-mono); font-size: 10.5px; color: var(--ivory-3); letter-spacing: .2em; }
+.pcard.wide b { font-weight: 600; font-size: 20px; color: var(--ivory); letter-spacing: -.03em; }
+.pcard .sub { color: var(--ivory-2); }
+.pcard.wide .txt::after { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .2em; color: var(--ivory-2); content: "풀이 보기  →"; }
+.pcard.wide:hover .txt::after { letter-spacing: .26em; color: var(--ivory); }
+.pcard .tag { background: rgba(12,11,10,.72); color: var(--ivory); }
+.pcard.soon { border-bottom: 1px solid rgba(236,228,212,.12); }
+.pcard.soon .glyph-big { color: var(--ivory-3); }
+
+/* 바닥글 */
+.site-foot { border-top-color: rgba(236,228,212,.14); }
+.site-foot b { color: var(--ivory); letter-spacing: .26em; font-weight: 600; }
+
+/* 버튼 전체: 주홍 → 아이보리 단색 (결제 버튼만 붉은 실 색) */
+.btn { border-radius: 0; background: var(--ivory); color: #14110e; font-family: var(--f-serif); font-weight: 600; letter-spacing: 0; height: 54px; }
+.btn:hover { background: #fff; }
+.btn[disabled] { background: rgba(236,228,212,.12); color: var(--ivory-3); }
+.btn-ghost { background: transparent; color: var(--ivory); border: 1px solid rgba(236,228,212,.3); }
+.btn-ghost:hover { background: transparent; border-color: var(--ivory); }
+[data-unlock].btn, #unlockBtn, #payBtn, .fx-unlock .btn, .sheet [data-pay] { background: var(--red); color: #f6ecdc; }
+[data-unlock].btn:hover, #unlockBtn:hover, .fx-unlock .btn:hover { background: #c2402f; }
+.input, .sel { background-color: transparent; border-color: rgba(236,228,212,.2); border-radius: 0; }
+.input:focus, .sel:focus { border-color: var(--ivory); }
+.seg { background: transparent; border-color: rgba(236,228,212,.2); border-radius: 0; }
+.seg button[aria-pressed="true"] { background: var(--ivory); color: #14110e; }
+
+/* 하단 메뉴 */
+.tabbar { background: rgba(12,11,10,.9); border-top: 1px solid rgba(236,228,212,.12); }
+.tabbar button { font-family: var(--f-body); font-size: 10.5px; letter-spacing: .02em; }
+.tabbar button[aria-current="page"] { color: var(--ivory); }
+.tabbar button[aria-current="page"] svg { color: var(--ivory); filter: none; }
+
+/* 시트(결제·공유) */
+.sheet { border-radius: 0; background: #12100e; border-top: 1px solid rgba(236,228,212,.16); }
+
+/* 큰 화면: 휴대폰 하단 메뉴 대신 상단 메뉴 버튼만, 홈 본문은 넓게 */
+@media (min-width: 900px) {
+  .tabbar { display: none !important; }
+  #v-home .home { max-width: 1040px; width: calc(100vw - 96px); margin-left: calc(50% - min(520px, 50vw - 48px)); padding-left: 0; padding-right: 0; }
+  #v-home .cards { display: grid; grid-template-columns: 1fr 1fr; column-gap: 48px; }
+  #v-home .pcard.soon { align-self: center; }
+  .hx-btn { flex: none; padding: 0 34px; }
+  .hx-title { font-size: clamp(52px, 4.8vw, 72px); }
+}
+@media (min-width: 900px) {
+  #v-home .pcard.wide, #v-home .pcard.wide:nth-child(even) { grid-template-columns: 148px 1fr; column-gap: 28px; }
+  #v-home .pcard.wide:nth-child(even) .thumb { order: 0; }
+  #v-home .banner { aspect-ratio: 21 / 9; max-height: 480px; }
+  #v-home .banner-img { object-position: 50% 28%; }
+}

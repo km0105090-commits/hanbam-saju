@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test tests/saju.test.ts"
+    "test": "node --test tests/saju.test.ts tests/insights.test.ts"
   },
   "dependencies": {
     "korean-lunar-calendar": "^0.4.0",

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import * as saju from "@/lib/saju";
+import { installFeatures } from "@/features";
 
 declare global {
   interface Window {
@@ -14,6 +15,7 @@ declare global {
 export default function LegacyBoot() {
   useEffect(() => {
     window.HanbamSaju = saju;
+    installFeatures();
     startHeroVideo();
     if (window.__hanbamBooted) return;
     window.__hanbamBooted = true;
