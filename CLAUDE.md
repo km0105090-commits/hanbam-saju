@@ -12,7 +12,7 @@
   - 엔진을 고치면 반드시 `npm test` 를 돌리고, 새 규칙에는 테스트를 추가하세요.
 - `src/app/page.tsx` + `src/legacy/markup.ts` + `public/legacy/app.js` — claude.ai 에서 만든 샘플 화면을 그대로 옮긴 것. 화면 문구·흐름은 여기 있어요. 점차 React 컴포넌트로 옮길 예정.
 - `src/lib/saju/insights.ts`, `oneQuestion.ts` — 오늘의 카드·오행 보완·대운 흐름·궁합·인연 달·990원 질문 결과지 규칙 (테스트: `tests/insights.test.ts`)
-- `src/features/` — 새 화면(스크롤 장면, 오늘의 카드, 내 오행·대운, 궁합, 홍연 인연, 한 가지 질문, 공유 카드). 스타일은 `src/app/features.css`, 전체 다듬기는 `src/app/polish.css`
+- `src/features/` — 새 화면(스크롤 장면, 오늘의 카드, 내 오행·대운, 궁합, 홍연 인연, 한 가지 질문, 공유 카드). 스타일은 `src/app/features.css`, 전체 디자인 톤(신세대: Pretendard, 남색·체리 레드, 둥근 카드)은 `src/app/fresh.css`
 - `src/app/api/saju` — 만세력 계산 API (AI 풀이 생성 때 사용)
 - `src/app/api/payments/confirm` — 토스페이먼츠 결제 승인 뼈대 (아직 화면과 미연결)
 - `src/config/products.ts` — 상품·가격표. 결제 금액은 서버에서 이 표로 검증.

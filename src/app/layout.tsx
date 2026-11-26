@@ -2,7 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./hanbam.css";
 import "./premium.css";
 import "./features.css";
-import "./polish.css";
+import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
+import "./fresh.css";
 
 export const metadata: Metadata = {
   title: "한밤사주",
@@ -13,7 +14,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#0e121f",
+  themeColor: "#090b17",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -25,7 +26,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Serif+KR:wght@400;500;600;700;900&family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&display=swap"
         />
       </head>
       <body>{children}</body>

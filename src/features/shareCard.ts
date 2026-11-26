@@ -18,7 +18,6 @@ export type ShareSpec = {
 };
 
 const W = 1080, H = 1920;
-const GOLD = ["#f8ecc9", "#e3c27f", "#b88d4f", "#f1dca6"];
 
 function rng(seed: number) {
   let s = seed >>> 0 || 1;
@@ -40,11 +39,15 @@ function wrap(ctx: CanvasRenderingContext2D, text: string, maxW: number) {
 async function fontsReady() {
   try {
     await Promise.all([
-      document.fonts.load('900 300px "Noto Serif KR"'),
-      document.fonts.load('700 64px "Noto Serif KR"'),
-      document.fonts.load('400 40px "IBM Plex Sans KR"'),
+      document.fonts.load('900 300px "Noto Serif KR"', "火"),
+      document.fonts.load('800 64px "Pretendard Variable"', "한밤"),
+      document.fonts.load('500 40px "Pretendard Variable"', "한밤"),
     ]);
   } catch { /* 글꼴이 없어도 기본 글꼴로 그려요 */ }
+}
+
+function rrect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+  ctx.beginPath(); ctx.roundRect(x, y, w, h, r);
 }
 
 export async function drawShareCard(spec: ShareSpec): Promise<HTMLCanvasElement> {
@@ -52,100 +55,99 @@ export async function drawShareCard(spec: ShareSpec): Promise<HTMLCanvasElement>
   const c = document.createElement("canvas");
   c.width = W; c.height = H;
   const ctx = c.getContext("2d")!;
-  const serif = '"Noto Serif KR", "Gowun Batang", serif';
-  const sans = '"IBM Plex Sans KR", "Apple SD Gothic Neo", sans-serif';
+  const hanja = '"Noto Serif KR", serif';
+  const sans = '"Pretendard Variable", Pretendard, "Apple SD Gothic Neo", sans-serif';
+  const accent = spec.accent || "#ff4a6b";
 
-  // 밤하늘 바탕
-  const bg = ctx.createLinearGradient(0, 0, 0, H);
-  bg.addColorStop(0, "#0d1020"); bg.addColorStop(.55, "#15120f"); bg.addColorStop(1, "#0b0908");
-  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-  const glow = ctx.createRadialGradient(W / 2, 760, 40, W / 2, 760, 620);
-  glow.addColorStop(0, "rgba(246,231,193,.16)"); glow.addColorStop(1, "rgba(246,231,193,0)");
-  ctx.fillStyle = glow; ctx.fillRect(0, 0, W, H);
+  // 한밤 남색 바탕 + 위는 라벤더, 아래는 체리빛 번짐
+  ctx.fillStyle = "#090b17"; ctx.fillRect(0, 0, W, H);
+  const g1 = ctx.createRadialGradient(W * .85, 120, 20, W * .85, 120, 900);
+  g1.addColorStop(0, "rgba(183,176,255,.34)"); g1.addColorStop(1, "rgba(183,176,255,0)");
+  ctx.fillStyle = g1; ctx.fillRect(0, 0, W, H);
+  const g2 = ctx.createRadialGradient(W * .1, H - 160, 20, W * .1, H - 160, 1000);
+  g2.addColorStop(0, "rgba(255,61,99,.42)"); g2.addColorStop(1, "rgba(255,61,99,0)");
+  ctx.fillStyle = g2; ctx.fillRect(0, 0, W, H);
   const r = rng(spec.glyph.charCodeAt(0) * 31 + spec.title.length);
-  for (let i = 0; i < 240; i++) {
-    const x = r() * W, y = r() * H * .8, s = r();
-    ctx.fillStyle = `rgba(246,231,193,${.15 + s * .55})`;
-    ctx.beginPath(); ctx.arc(x, y, .6 + s * 1.8, 0, Math.PI * 2); ctx.fill();
+  for (let i = 0; i < 160; i++) {
+    const x = r() * W, y = r() * H * .75, s = r();
+    ctx.fillStyle = `rgba(255,255,255,${.12 + s * .5})`;
+    ctx.beginPath(); ctx.arc(x, y, .6 + s * 1.6, 0, Math.PI * 2); ctx.fill();
   }
 
-  // 금테 두 줄
-  const gold = ctx.createLinearGradient(0, 0, W, H);
-  GOLD.forEach((g, i) => gold.addColorStop(i / 3, g));
-  ctx.strokeStyle = gold; ctx.lineWidth = 3; ctx.strokeRect(54, 54, W - 108, H - 108);
-  ctx.globalAlpha = .35; ctx.lineWidth = 1.5; ctx.strokeRect(72, 72, W - 144, H - 144); ctx.globalAlpha = 1;
+  // 상단: 둥근 로고 + 이름
+  const lg = ctx.createLinearGradient(96, 120, 176, 200);
+  lg.addColorStop(0, "#ff6a7f"); lg.addColorStop(1, "#d61f52");
+  ctx.fillStyle = lg; rrect(ctx, 96, 124, 76, 76, 24); ctx.fill();
+  ctx.fillStyle = "#fff"; ctx.font = `800 24px ${sans}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.fillText("한", 134, 150); ctx.fillText("밤", 134, 176);
+  ctx.textAlign = "left"; ctx.font = `800 46px ${sans}`; ctx.fillText("한밤사주", 196, 164);
 
-  // 상단: 인장 + 이름
-  ctx.save();
-  ctx.translate(W / 2 - 128, 176); ctx.rotate(-.05);
-  ctx.fillStyle = "#b5372a"; ctx.fillRect(-34, -34, 68, 68);
-  ctx.strokeStyle = "rgba(246,233,214,.55)"; ctx.lineWidth = 3; ctx.strokeRect(-29, -29, 58, 58);
-  ctx.fillStyle = "#f6e9d6"; ctx.font = `700 25px ${serif}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-  ctx.fillText("한", 0, -12); ctx.fillText("밤", 0, 14);
-  ctx.restore();
-  ctx.fillStyle = "#f6e7c1"; ctx.font = `700 46px ${serif}`; ctx.textAlign = "left"; ctx.textBaseline = "middle";
-  ctx.letterSpacing = "14px";
-  ctx.fillText("한밤사주", W / 2 - 74, 178);
-  ctx.letterSpacing = "8px";
+  // 유리판
+  const px = 72, py = 300, pw = W - 144, ph = 1380;
+  ctx.fillStyle = "rgba(255,255,255,.06)"; rrect(ctx, px, py, pw, ph, 64); ctx.fill();
+  ctx.strokeStyle = "rgba(255,255,255,.14)"; ctx.lineWidth = 2; ctx.stroke();
 
-  // 머리말
-  ctx.textAlign = "center";
-  ctx.fillStyle = "#e0bf7d"; ctx.font = `500 34px ${serif}`;
-  ctx.fillText(spec.eyebrow, W / 2, 330);
-  ctx.letterSpacing = "0px";
-  ctx.fillStyle = "rgba(226,194,128,.4)"; ctx.fillRect(W / 2 - 40, 374, 80, 2);
+  // 머리말 칩
+  ctx.textAlign = "center"; ctx.font = `700 32px ${sans}`;
+  const ew = ctx.measureText(spec.eyebrow).width + 64;
+  ctx.fillStyle = "rgba(255,74,107,.2)"; rrect(ctx, (W - ew) / 2, 370, ew, 64, 32); ctx.fill();
+  ctx.fillStyle = "#ff9aae"; ctx.fillText(spec.eyebrow, W / 2, 403);
 
-  // 큰 한자
+  // 큰 한자 (명조 포인트)
   const n = [...spec.glyph].length;
-  const size = n <= 1 ? 380 : n === 2 ? 300 : n === 3 ? 230 : 190;
-  ctx.font = `900 ${size}px ${serif}`;
-  const gg = ctx.createLinearGradient(W / 2 - 300, 520, W / 2 + 300, 980);
-  gg.addColorStop(0, "#fbf0d2"); gg.addColorStop(.45, "#e3c27f"); gg.addColorStop(.7, "#b88d4f"); gg.addColorStop(1, "#f1dca6");
-  ctx.fillStyle = gg; ctx.shadowColor = "rgba(226,190,120,.45)"; ctx.shadowBlur = 60;
-  ctx.fillText(spec.glyph, W / 2, 770);
+  const size = n <= 1 ? 340 : n === 2 ? 270 : n === 3 ? 210 : 170;
+  ctx.font = `900 ${size}px ${hanja}`;
+  const gg = ctx.createLinearGradient(W / 2 - 260, 540, W / 2 + 260, 900);
+  gg.addColorStop(0, "#ffe2a3"); gg.addColorStop(.55, "#ffb8c6"); gg.addColorStop(1, accent);
+  ctx.fillStyle = gg; ctx.shadowColor = "rgba(255,74,107,.45)"; ctx.shadowBlur = 70;
+  ctx.fillText(spec.glyph, W / 2, 730);
   ctx.shadowBlur = 0;
 
   // 제목
-  ctx.fillStyle = "#fbf4e4"; ctx.font = `700 64px ${serif}`;
-  let y = 1090;
-  for (const ln of wrap(ctx, spec.title, W - 240)) { ctx.fillText(ln, W / 2, y); y += 84; }
+  ctx.fillStyle = "#ffffff"; ctx.font = `800 66px ${sans}`;
+  ctx.letterSpacing = "-2px";
+  let y = 1010;
+  for (const ln of wrap(ctx, spec.title, pw - 120)) { ctx.fillText(ln, W / 2, y); y += 84; }
+  ctx.letterSpacing = "0px";
 
-  // 점수 띠
+  // 점수 막대 (둥근 끝)
   if (spec.score != null) {
-    y += 10;
-    const bw = 560, bx = (W - bw) / 2;
-    ctx.fillStyle = "rgba(246,231,193,.12)"; ctx.fillRect(bx, y, bw, 10);
-    ctx.fillStyle = spec.accent || "#e3c27f"; ctx.fillRect(bx, y, bw * spec.score / 100, 10);
-    ctx.font = `700 40px ${serif}`; ctx.fillStyle = "#f6e7c1";
-    ctx.fillText(`${spec.score}점`, W / 2, y + 66);
-    y += 120;
-  } else y += 20;
+    y += 6;
+    const bw = 600, bx = (W - bw) / 2;
+    ctx.fillStyle = "rgba(255,255,255,.12)"; rrect(ctx, bx, y, bw, 16, 8); ctx.fill();
+    const sg = ctx.createLinearGradient(bx, 0, bx + bw, 0);
+    sg.addColorStop(0, "#ffb8c6"); sg.addColorStop(1, accent);
+    ctx.fillStyle = sg; rrect(ctx, bx, y, Math.max(16, bw * spec.score / 100), 16, 8); ctx.fill();
+    ctx.font = `800 52px ${sans}`; ctx.fillStyle = "#fff";
+    ctx.fillText(`${spec.score}점`, W / 2, y + 80);
+    y += 140;
+  } else y += 24;
 
   // 본문
-  ctx.fillStyle = "rgba(238,229,211,.86)"; ctx.font = `400 38px ${sans}`;
+  ctx.fillStyle = "rgba(246,244,255,.82)"; ctx.font = `500 37px ${sans}`;
   for (const para of spec.lines) {
-    for (const ln of wrap(ctx, para, W - 260)) { ctx.fillText(ln, W / 2, y); y += 58; }
-    y += 18;
-    if (y > 1640) break;
+    for (const ln of wrap(ctx, para, pw - 150)) { ctx.fillText(ln, W / 2, y); y += 56; }
+    y += 16;
+    if (y > 1540) break;
   }
 
-  // 칩
+  // 칩 (알약)
   if (spec.chips?.length) {
-    ctx.font = `500 32px ${sans}`;
-    const pads = spec.chips.map((t) => ctx.measureText(t).width + 56);
-    const total = pads.reduce((a, b) => a + b, 0) + (pads.length - 1) * 16;
+    ctx.font = `700 30px ${sans}`;
+    const pads = spec.chips.map((t) => ctx.measureText(t).width + 60);
+    const total = pads.reduce((a, b) => a + b, 0) + (pads.length - 1) * 14;
     let x = (W - total) / 2;
-    const cy = Math.max(y + 10, 1660);
+    const cy = Math.max(y + 6, 1560);
     spec.chips.forEach((t, i) => {
-      ctx.strokeStyle = "rgba(226,194,128,.5)"; ctx.lineWidth = 2; ctx.strokeRect(x, cy, pads[i], 64);
-      ctx.fillStyle = "#f6e7c1"; ctx.fillText(t, x + pads[i] / 2, cy + 33);
-      x += pads[i] + 16;
+      ctx.fillStyle = "rgba(255,255,255,.1)"; rrect(ctx, x, cy, pads[i], 66, 33); ctx.fill();
+      ctx.fillStyle = "#fff"; ctx.fillText(t, x + pads[i] / 2, cy + 34);
+      x += pads[i] + 14;
     });
   }
 
   // 바닥
-  ctx.fillStyle = "rgba(196,195,224,.55)"; ctx.font = `400 28px ${sans}`;
-  ctx.fillText("절기의 분 단위까지 맞춘 만세력 · 한밤사주", W / 2, H - 120);
+  ctx.fillStyle = "rgba(246,244,255,.5)"; ctx.font = `600 28px ${sans}`;
+  ctx.fillText("나도 보러 가기 · 한밤사주", W / 2, H - 130);
   return c;
 }
 
